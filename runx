@@ -17,3 +17,5 @@
 	# npx pod-install ios
 	# npm install @react-navigation/native-stack
 
+#-- Zustand
+# npm i zustand

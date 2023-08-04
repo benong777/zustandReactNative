@@ -5,9 +5,10 @@
  * @format
  */
 
-import React from 'react';
+import React, { useState } from 'react';
 import type {PropsWithChildren} from 'react';
 import {
+  Pressable,
   SafeAreaView,
   ScrollView,
   StatusBar,
@@ -25,35 +26,12 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
+import { useStore } from './store/zustand';
+
 type SectionProps = PropsWithChildren<{
   title: string;
 }>;
 
-function Section({children, title}: SectionProps): JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-}
 
 function App(): JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
@@ -61,6 +39,10 @@ function App(): JSX.Element {
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
+
+  const count = useStore(state => state.count);
+  const incrCount = useStore(state => state.increaseCount);
+  const decrCount = useStore(state => state.decreaseCount);
 
   return (
     <SafeAreaView style={backgroundStyle}>
@@ -71,25 +53,42 @@ function App(): JSX.Element {
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         style={backgroundStyle}>
-        <Header />
         <View
           style={{
             backgroundColor: isDarkMode ? Colors.black : Colors.white,
           }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
+
+          <View style={{ margin: 16, }}>
+            <View style={{ margin: 16, alignItems: 'center' }}>
+              <Text>{count}</Text>
+            </View>
+
+            <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+              <Pressable 
+                onPress={decrCount}
+                style={{ 
+                  margin: 16,
+                  padding: 8,
+                  backgroundColor: 'cyan',
+                  borderRadius: 8,
+                }}
+                >
+                <Text>Decr</Text>
+              </Pressable>
+              <Pressable 
+                onPress={incrCount}
+                style={{ 
+                  margin: 16,
+                  padding: 8,
+                  backgroundColor: 'cyan',
+                  borderRadius: 8,
+                }}
+                >
+                <Text>Incr</Text>
+              </Pressable>
+            </View>
+          </View>
+
         </View>
       </ScrollView>
     </SafeAreaView>
